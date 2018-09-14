@@ -1,0 +1,20 @@
+{
+  "name": "dev-directory",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^3.0.0",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "gravatar": "^1.6.0",
+    "mongoose": "^5.2.14",
+    "passport": "^0.4.0"
+  }
+}
