@@ -131,6 +131,25 @@ router.post(
   }
 );
 
+// @route   DELETE api/profile/experience/:exp_id
+// @desc    DELETE experience from profile
+// @access  Private
+router.delete('/experience/:exp_id',passport.authenticate('jwt', {session: false}),(req, res) => {
+    Profile.findOne({
+      user: req.user.id
+    }).then(profile => {
+      //Get remove index
+      const removeIndex = profile.experience
+      .map(item => item.id)
+      .indexOf(req.params.exp_id)
+
+      //splice out the array
+      profile.experience.splice(removeIndex, 1);
+      profile.save().then(profile => res.json(profile));
+    })
+    .catch(err => res.status(400).json(err));
+  }
+);
 // @route   POST api/profile/education
 // @desc    Add education to profile
 // @access  Private
@@ -140,7 +159,6 @@ router.post(
     session: false
   }),
   (req, res) => {
-
 
     Profile.findOne({
       user: req.user.id
@@ -163,6 +181,26 @@ router.post(
   }
 );
 
+// @route   DELETE api/profile/education/:edu_id
+// @desc    DELETE education from profile
+// @access  Private
+router.delete('/education/:edu_id',passport.authenticate('jwt', {session: false}),(req, res) => {
+  Profile.findOne({
+    user: req.user.id
+  }).then(profile => {
+    //Get remove index
+    const removeIndex = profile.education
+    .map(item => item.id)
+    .indexOf(req.params.edu_id)
+
+    //splice out the array
+    profile.education.splice(removeIndex, 1);
+    profile.save().then(profile => res.json(profile));
+  })
+  .catch(err => res.status(400).json(err));
+}
+);
+
 // @route   GET api/profile/:id
 // @desc    Get profile by user Id
 // @access  Public
@@ -176,6 +214,23 @@ router.get('/user/:user_id', (req, res) => {
     .then(profile => {
       if (!profile) {
         errors.noprofile = "There is no profile for this user";
+       return res.status(400).json(errors);
+      }
+      res.json(profile);
+    }).catch(err => res.status(400).json(errors));
+})
+
+// @route   GET api/profile/all
+// @desc    Get all the profile 
+// @access  Public
+router.get('/all', (req, res) => {
+  const errors = {};
+
+  Profile.find({})
+    .populate('user', ['name', 'avatar'])
+    .then(profile => {
+      if (!profile) {
+        errors.noprofile = "There are no profiles yet";
        return res.status(400).json(errors);
       }
       res.json(profile);
@@ -201,5 +256,23 @@ router.get('/handle/:handle', (req, res) => {
       res.json(profile);
     }).catch(err => res.status(400).json(errors));
 })
+
+// @route   DELETE api/profile
+// @desc    DELETE a user and profile
+// @access  Private
+router.delete('/',passport.authenticate('jwt', {session: false}),(req, res) => {
+  Profile.findOneAndRemove({user: req.user.id})
+  .then(() => {
+    User.findOneAndRemove({_id: req.user.id})
+    .then(() => {
+      res.json(
+        {success: true,
+          msg: "Profile deleted"
+      })
+    })
+  })
+}
+);
+
 
 module.exports = router;
