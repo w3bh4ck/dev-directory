@@ -15,14 +15,20 @@ app.use(passport.initialize());
 require('../../config/passport')(passport);
 
 router.get('/test', (req, res) => {
-    res.json({ msg: "User works" });
+    res.json({
+        msg: "User works"
+    });
 })
 
 //New user registration
 router.post('/register', (req, res) => {
-    User.findOne({ email: req.body.email }).then(user => {
+    User.findOne({
+        email: req.body.email
+    }).then(user => {
         if (user) {
-            return res.status(400).json({ msg: "Email already exists" });
+            return res.status(400).json({
+                msg: "Email already exists"
+            });
         } else {
             let avatar = gravatar.url(req.body.email, {
                 s: "200",
@@ -56,9 +62,13 @@ router.post('/login', (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
 
-    User.findOne({ email }).then(user => {
+    User.findOne({
+        email
+    }).then(user => {
         if (!user) {
-            return res.status(400).json({ msg: "User not found" });
+            return res.status(400).json({
+                msg: "User not found"
+            });
         }
         //check the user password
         bcrypt.compare(password, user.password)
@@ -69,13 +79,17 @@ router.post('/login', (req, res) => {
                         name: user.name,
                         avatar: user.avatar
                     }; //create JWT payload
-
-                    const token = jwt.sign(payload, jwtsecret, { expiresIn: 3600 });
+                    const token = jwt.sign(payload, jwtsecret, {
+                        expiresIn: 3600
+                    });
                     res.json({
                         login: true,
-                        token: 'Bearer ' + token });
+                        token: 'Bearer ' + token
+                    });
                 } else {
-                    return res.status(400).json({ msg: "wrong password" });
+                    return res.status(400).json({
+                        msg: "wrong password"
+                    });
                 }
             });
     })
@@ -85,7 +99,9 @@ router.post('/login', (req, res) => {
 //@desc     return current user
 //@access   private
 
-router.get('/current', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/current', passport.authenticate('jwt', {
+    session: false
+}), (req, res) => {
     res.json({
         id: req.user.id,
         name: req.user.name,
