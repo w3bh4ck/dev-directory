@@ -85,7 +85,7 @@ router.post('/login', (req, res) => {
                     res.json({
                         login: true,
                         token: 'Bearer ' + token
-                    });
+                  });
                 } else {
                     return res.status(400).json({
                         msg: "wrong password"
