@@ -26,7 +26,7 @@ router.post('/register', (req, res) => {
         email: req.body.email
     }).then(user => {
         if (user) {
-            return res.status(400).json({
+            return res.json({
                 msg: "Email already exists"
             });
         } else {
@@ -52,6 +52,8 @@ router.post('/register', (req, res) => {
                         .catch(err => console.log(err));
                 });
             });
+
+            res.json({msg: "signup successful"})
 
         }
     });
