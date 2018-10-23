@@ -4,6 +4,8 @@ const gravatar = require('gravatar');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
+const validator = require('validator');
+const expressValidator = require('express-validator');
 const User = require('../../models/User'); //load user's model
 
 const jwtsecret = "secret";
@@ -22,6 +24,21 @@ router.get('/test', (req, res) => {
 
 //New user registration
 router.post('/register', (req, res) => {
+     //validate the form input
+    req.checkBody('name', 'Name is required').notEmpty();
+    req.checkBody('email', 'Email is required').notEmpty();
+	req.checkBody('email', 'Email is not valid').isEmail()
+    req.checkBody('password', 'Password is required').notEmpty();
+    req.checkBody('password', 'Password length must be minimum of 6').isLength({ min: 6 });
+	req.checkBody('password2', 'Passwords do not match').equals(req.body.password);
+       
+    let errors = req.validationErrors();
+    let errorObjects = [];
+    if (errors){
+        for(let x = 0; x < errors.length; x++){
+          return res.send
+        }
+    }
     User.findOne({
         email: req.body.email
     }).then(user => {
@@ -52,9 +69,7 @@ router.post('/register', (req, res) => {
                         .catch(err => console.log(err));
                 });
             });
-
             res.json({msg: "signup successful"})
-
         }
     });
 });
@@ -100,7 +115,6 @@ router.post('/login', (req, res) => {
 //@route    GET api/users/current
 //@desc     return current user
 //@access   private
-
 router.get('/current', passport.authenticate('jwt', {
     session: false
 }), (req, res) => {
