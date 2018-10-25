@@ -38,7 +38,7 @@ router.post('/register', (req, res) => {
         for(let x = 0; x < errors.length; x++){
          allErrors.push(errors[x].msg);
         }
-        return res.send(allErrors);
+        return res.status(400).send(allErrors);
     }
     User.findOne({
         email: req.body.email
