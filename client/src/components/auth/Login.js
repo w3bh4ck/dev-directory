@@ -5,7 +5,8 @@ import React, { Component } from 'react'
          super();
          this.state = {
              email: '',
-             password:''
+             password:'',
+             errors: {}
          }
          this.onchange = this.onchange.bind(this);
          this.onsubmit = this.onsubmit.bind(this);
