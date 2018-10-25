@@ -33,11 +33,12 @@ router.post('/register', (req, res) => {
 	req.checkBody('password2', 'Passwords do not match').equals(req.body.password);
        
     let errors = req.validationErrors();
-    let errorObjects = [];
+    let allErrors = [];
     if (errors){
         for(let x = 0; x < errors.length; x++){
-          return res.send
+         allErrors.push(errors[x].msg);
         }
+        return res.status(400).send(allErrors);
     }
     User.findOne({
         email: req.body.email
