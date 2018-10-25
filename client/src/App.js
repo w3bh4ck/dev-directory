@@ -5,7 +5,7 @@ import Footer from './components/Footer';
 import Landing from './components/Landing';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 import Register from './components/auth/Register';
-import Login from './components/auth/Register';
+import Login from './components/auth/Login';
 
 
 class App extends Component {
