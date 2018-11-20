@@ -11,7 +11,8 @@ export default function(state = initialState, action){
         case SET_CURRENT_USER:
            return {
                ...state,
-               isAuthenticated: action.payload //need to be looked into the more.
+               isAuthenticated: action.payload, //need to be looked into the more.
+               user: action.payload
            } 
         default:
             return state;
